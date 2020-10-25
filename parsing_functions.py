@@ -34,7 +34,6 @@ def parse_brand_year_power(response):
         split_header = full_header.text.split(', ')
         brand_model = split_header[0]
         year = split_header[1][0:4]
-        odometer = split_header[1]
 
         for i in split_header:
             if 'л.с.' in i:
@@ -69,9 +68,17 @@ def parse_urls(response):
     return list_urls
 
 
-def parse_description(response):
+def parse_description_odometer(response):
     soup = BeautifulSoup(response, 'html.parser')
-    return soup.find('span', class_="css-11eoza4 e162wx9x0").text
+    description = soup.find('span', class_="css-11eoza4 e162wx9x0").text
+
+    odometer = None
+    all_data = soup.find_all('tr', class_="css-10191hq ezjvm5n2")
+    for i in all_data:
+        if 'Пробег' in i.text:
+            odometer = i.text.split('км')[1]
+
+    return {'description': description, 'odometer': odometer}
 
 
 def parse_url_next_page(response):
