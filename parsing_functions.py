@@ -29,7 +29,7 @@ def html_response(url, headers):
 
 def parse_brand_year_power_prices_cities_urls(response):
     soup = BeautifulSoup(response, 'html.parser')
-    first_data = []
+    first_data = dict()
     for full_header in soup.find_all('a', class_="css-1hgk7d1 eiweh7o2"):
 
         split_header = full_header.text.split(', ')
@@ -42,9 +42,7 @@ def parse_brand_year_power_prices_cities_urls(response):
         for i in split_header:
             if 'л.с.' in i:
                 power = i.rsplit('(')[-1][:-6]
-        first_data.append(
-            {url: {'brand_model': brand_model, 'year': year, 'power': power, 'price': price, 'city': city}}
-        )
+        first_data[url] = ({'brand_model': brand_model, 'year': year, 'power': power, 'price': price, 'city': city})
     return first_data
 
 
