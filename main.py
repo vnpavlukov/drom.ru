@@ -9,25 +9,7 @@ def main(main_url):
 
         main_page_response = html_response(main_url, WEB_HEADERS)
 
-        cars_brand_year_power = parse_brand_year_power(main_page_response)
-        cars_prices = parse_prices(main_page_response)
-        cars_cities = parse_cities(main_page_response)
-        cars_urls = parse_urls(main_page_response)
-
-        brand_year_power_prices = []
-        for data, price in zip(cars_brand_year_power, cars_prices):
-            data['price'] = price
-            brand_year_power_prices.append(data)
-
-        brand_year_power_prices_cities = []
-        for data, city in zip(brand_year_power_prices, cars_cities):
-            data['city'] = city
-            brand_year_power_prices_cities.append(data)
-
-        brand_year_power_prices_cities_urls = []
-        for data, url in zip(brand_year_power_prices, cars_urls):
-            data['url'] = url
-            brand_year_power_prices_cities_urls.append(data)
+        brand_year_power_prices_cities_urls = parse_brand_year_power_prices_cities_urls(main_page_response)
 
         for car_data in brand_year_power_prices_cities_urls:
             print('Parse', car_data['brand_model'], car_data['year'], 'url:', car_data['url'])
@@ -41,8 +23,10 @@ def main(main_url):
 
         next_main_url = parse_url_next_page(main_page_response)
         if not next_main_url:
+            print('Это была последняя страница')
             break
         n += 1
+        print()
 
 
 if __name__ == '__main__':
@@ -56,3 +40,4 @@ if __name__ == '__main__':
 
     print('Start scraping...')
     main(main_page)
+    json_to_xlsx()

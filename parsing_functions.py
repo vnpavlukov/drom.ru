@@ -27,45 +27,25 @@ def html_response(url, headers):
             print('Making another request...')
 
 
-def parse_brand_year_power(response):
+def parse_brand_year_power_prices_cities_urls(response):
     soup = BeautifulSoup(response, 'html.parser')
-    main_page_data = []
+    first_data = []
     for full_header in soup.find_all('a', class_="css-1hgk7d1 eiweh7o2"):
+
         split_header = full_header.text.split(', ')
         brand_model = split_header[0]
         year = split_header[1][0:4]
+        price = full_header.find('span', class_="css-jnatj e162wx9x0").text[:-2]
+        city = full_header.find('span', class_="css-17qid0e e162wx9x0").text.split()[0]
+        url = full_header.get('href')
         power = None
         for i in split_header:
             if 'л.с.' in i:
                 power = i.rsplit('(')[-1][:-6]
-
-        main_page_data.append({'brand_model': brand_model, 'year': year, 'power': power})
-    return main_page_data
-
-
-def parse_prices(response):
-    soup = BeautifulSoup(response, 'html.parser')
-    prices_list = list()
-    for price in soup.find_all('span', class_="css-jnatj e162wx9x0"):
-        prices_list.append(price.text[:-2])
-    return prices_list
-
-
-def parse_cities(response):
-    soup = BeautifulSoup(response, 'html.parser')
-    city_list = list()
-    for city in soup.find_all('span', class_="css-17qid0e e162wx9x0"):
-        city_list.append(city.text.split()[0])
-    return city_list
-
-
-def parse_urls(response):
-    soup = BeautifulSoup(response, 'html.parser')
-    list_urls = list()
-    first = soup.find('div', class_='css-10ib5jr e93r9u20')
-    for i in first.find_all('a', class_='css-1hgk7d1 eiweh7o2'):
-        list_urls.append(i.get('href'))
-    return list_urls
+        first_data.append({
+            'brand_model': brand_model, 'year': year, 'power': power, 'price': price,
+            'city': city, 'url': url})
+    return first_data
 
 
 def parse_description_odometer(response):
