@@ -27,22 +27,26 @@ def main(main_url):
         data['url'] = url
         brand_year_power_prices_cities_urls.append(data)
 
-    first_car = 'https://ufa.drom.ru/land_rover/freelander/38618914.html'
-    first_car_response = html_response(first_car, WEB_HEADERS)
+    for car in brand_year_power_prices_cities_urls:
+        print('Parse', car['brand_model'], car['year'], 'url:', car['url'])
+        first_car_response = html_response(car['url'], WEB_HEADERS)
+        car_description_odometer = parse_description_odometer(first_car_response)
+        car.update(car_description_odometer)
+        sleep(1)
 
-    car_description_odometer = parse_description_odometer(first_car_response)
+    file_name = file_name_path_data_name_d_m_h()
+    write_data_in_file(brand_year_power_prices_cities_urls, file_name)
+    json_to_xlsx()
+
     next_url = parse_url_next_page(first_page_response)
-
-    print(car_description_odometer)
     print(next_url)
-    print(brand_year_power_prices_cities_urls)
 
 
 if __name__ == '__main__':
 
-    what_to_parse = input('Парсить УФУ (+200 км, выше 950 тыс) или другой запрос? (д/н)').lower()
+    what_to_parse = input('Будем парсить парсить УФУ (+200 км, выше 950 тыс)?\n(д/н): ').lower()
 
-    if what_to_parse == 'д':
+    if what_to_parse in ['д', 'l', 'y']:
         main_page = 'https://ufa.drom.ru/auto/all/?minprice=950000&unsold=1&distance=200&order=price'
     else:
         main_page = input('Вставьте ссылку drom.ru с выставленными фильтрами: ')
