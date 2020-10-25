@@ -42,9 +42,9 @@ def parse_brand_year_power_prices_cities_urls(response):
         for i in split_header:
             if 'л.с.' in i:
                 power = i.rsplit('(')[-1][:-6]
-        first_data.append({
-            'brand_model': brand_model, 'year': year, 'power': power, 'price': price,
-            'city': city, 'url': url})
+        first_data.append(
+            {url: {'brand_model': brand_model, 'year': year, 'power': power, 'price': price, 'city': city}}
+        )
     return first_data
 
 
