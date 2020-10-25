@@ -46,7 +46,7 @@ def parse_brand_year_power_prices_cities_urls(response):
     return first_data
 
 
-def parse_description_odometer(response):
+def parse_odometer_description(response):
     soup = BeautifulSoup(response, 'html.parser')
     try:
         description = soup.find('span', class_="css-11eoza4 e162wx9x0").text
@@ -61,7 +61,7 @@ def parse_description_odometer(response):
             else:
                 odometer = i.text.split('км')[1]
 
-    return {'description': description, 'odometer': odometer}
+    return {'odometer': odometer, 'description': description}
 
 
 def parse_url_next_page(response):
