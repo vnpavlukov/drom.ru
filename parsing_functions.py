@@ -89,4 +89,7 @@ def parse_description_odometer(response):
 def parse_url_next_page(response):
     soup = BeautifulSoup(response, 'html.parser')
     first = soup.find('div', class_='css-se5ay5 e1lm3vns0')
-    return first.find('a', class_='css-1to36mm e24vrp31').get('href')
+    try:
+        return first.find('a', class_='css-1to36mm e24vrp31').get('href')
+    except AttributeError:
+        return None
