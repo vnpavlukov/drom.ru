@@ -34,7 +34,7 @@ def parse_brand_year_power(response):
         split_header = full_header.text.split(', ')
         brand_model = split_header[0]
         year = split_header[1][0:4]
-
+        power = None
         for i in split_header:
             if 'л.с.' in i:
                 power = i.rsplit('(')[-1][:-6]
@@ -70,13 +70,18 @@ def parse_urls(response):
 
 def parse_description_odometer(response):
     soup = BeautifulSoup(response, 'html.parser')
-    description = soup.find('span', class_="css-11eoza4 e162wx9x0").text
+    try:
+        description = soup.find('span', class_="css-11eoza4 e162wx9x0").text
+    except AttributeError:
+        description = None
 
     odometer = None
-    all_data = soup.find_all('tr', class_="css-10191hq ezjvm5n2")
-    for i in all_data:
+    for i in soup.find_all('tr', class_="css-10191hq ezjvm5n2"):
         if 'Пробег' in i.text:
-            odometer = i.text.split('км')[1]
+            if 'новый автомобиль' in i.text:
+                odometer = 'новый автомобиль'
+            else:
+                odometer = i.text.split('км')[1]
 
     return {'description': description, 'odometer': odometer}
 
@@ -84,6 +89,4 @@ def parse_description_odometer(response):
 def parse_url_next_page(response):
     soup = BeautifulSoup(response, 'html.parser')
     first = soup.find('div', class_='css-se5ay5 e1lm3vns0')
-
-    url = first.find('a', class_='css-1to36mm e24vrp31')
-    print(url.get('href'))
+    return first.find('a', class_='css-1to36mm e24vrp31').get('href')
