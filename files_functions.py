@@ -9,6 +9,11 @@ def file_name_path_data_name_d_m_h():
     return os.path.join('data', f"data_drom.ru_{now_day_month_hour}.00.json")
 
 
+def get_city_data_from_json_file(file_name):
+    with open(file_name, encoding="utf8") as file:
+        return json.load(file)
+
+
 def json_to_xlsx():
     while True:
         is_convert = input('Do you want to convert from json to xlsx?\n(y/n): ').lower()
