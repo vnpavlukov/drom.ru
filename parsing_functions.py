@@ -33,16 +33,19 @@ def parse_brand_year_power_prices_cities_urls(response):
     for full_header in soup.find_all('a', class_="css-1hgk7d1 eiweh7o2"):
 
         split_header = full_header.text.split(', ')
-        brand_model = split_header[0]
+        url = full_header.get('href')
+        brand_model = url.split('drom.ru/')[1].split('/')
+        brand = brand_model[0]
+        model = brand_model[1]
         year = split_header[1][0:4]
         price = full_header.find('span', class_="css-jnatj e162wx9x0").text[:-2]
         city = full_header.find('span', class_="css-17qid0e e162wx9x0").text.split()[0]
-        url = full_header.get('href')
+
         power = None
         for i in split_header:
             if 'л.с.' in i:
                 power = i.rsplit('(')[-1][:-6]
-        first_data[url] = ({'brand_model': brand_model, 'year': year, 'power': power, 'price': price, 'city': city})
+        first_data[url] = ({'brand': brand, 'model': model, 'year': year, 'power': power, 'price': price, 'city': city})
     return first_data
 
 
