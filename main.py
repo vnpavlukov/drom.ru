@@ -29,7 +29,7 @@ def main(main_url):
                 print(n, 'Parse', data['brand'], data['model'], data['year'], 'url:', key_url)
 
                 car_response = html_response(key_url, WEB_HEADERS)
-                car_description_odometer = parse_odometer_description(car_response)
+                car_description_odometer = parse_seller_odometer_description(car_response)
                 brand_year_power_prices_cities_urls[key_url].update(car_description_odometer)
                 cars_data.update(brand_year_power_prices_cities_urls)
                 sleep(1)

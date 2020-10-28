@@ -49,8 +49,20 @@ def parse_brand_year_power_prices_cities_urls(response):
     return first_data
 
 
-def parse_odometer_description(response):
+def parse_seller_odometer_description(response):
     soup = BeautifulSoup(response, 'html.parser')
+
+    try:
+        seller = soup.find('div', class_="css-auda1y e162wx9x0").find('a', class_="css-ioq5yh e1wvjnck0").text
+    except AttributeError:
+        seller = None
+
+    if not seller:
+        try:
+            seller = soup.find('div', class_="css-98yt60 e29k6pi2").text
+        except AttributeError:
+            seller = None
+
     try:
         description = soup.find('span', class_="css-11eoza4 e162wx9x0").text
     except AttributeError:
@@ -67,7 +79,7 @@ def parse_odometer_description(response):
                 except:
                     odometer = '??'
 
-    return {'odometer': odometer, 'description': description}
+    return {'seller': seller, 'odometer': odometer, 'description': description}
 
 
 def parse_url_next_page(response):
