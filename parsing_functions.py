@@ -62,7 +62,10 @@ def parse_odometer_description(response):
             if 'новый автомобиль' in i.text:
                 odometer = 'новый автомобиль'
             else:
-                odometer = i.text.split('км')[1]
+                try:
+                    odometer = i.text.split('км')[1]
+                except:
+                    odometer = '??'
 
     return {'odometer': odometer, 'description': description}
 
